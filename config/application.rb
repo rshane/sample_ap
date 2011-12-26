@@ -1,4 +1,7 @@
 require File.expand_path('../boot', __FILE__)
+##ADDED##
+require 'rails/all'
+##/ADDED##
 
 # Pick the frameworks you want:
 require "active_record/railtie"
@@ -7,6 +10,12 @@ require "action_mailer/railtie"
 require "active_resource/railtie"
 require "sprockets/railtie"
 # require "rails/test_unit/railtie"
+
+##ADDED##
+ #If you have a Gemfils, require the gems listed there, including any gems
+ # you've limited to :test, :development, or :production
+ Bundler. require(:default, Rails.env) if defined?(Bundler)
+##/ADDED##
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
@@ -50,5 +59,16 @@ module SampleAp
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+ 
+  ##ADDED##
+  ##Part of a Spork hack. see htt[://bit.ly/arY19y
+  if Rails.env.test?
+    initializer :after => :initialize_dependency_mechanism do
+      # Work around initializer in railties/lib/rails/application/bootstrap.rb
+      ActiveSupport::Dependencies.mechanism = :load
   end
+  ##/ADDED##
 end
+end
+end
+
